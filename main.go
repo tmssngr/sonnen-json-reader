@@ -7,6 +7,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -17,11 +18,28 @@ const urlHttp = "http://"
 const urlPortPath = ":80/api/v2/status"
 
 func main() {
-	urlString, err := determineUrl()
-	if err != nil {
-		return
+	argsCount := len(os.Args)
+	if argsCount == 2 {
+		firstArg := os.Args[1]
+		if firstArg == "--detect" {
+			urlString, err := determineUrl()
+			if err != nil {
+				return
+			}
+
+			fmt.Println("Detected ", urlString)
+			return
+		} else if strings.HasPrefix(firstArg, "http://") {
+			readValuesFrom(firstArg)
+			return
+		}
 	}
 
+	fmt.Println("--detect  detect URL in local network")
+	fmt.Println("<url>     read JSON from URL")
+}
+
+func readValuesFrom(urlString string) {
 	fmt.Println("Reading from ", urlString)
 
 	for {
