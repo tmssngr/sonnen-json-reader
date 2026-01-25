@@ -22,14 +22,13 @@ func main() {
 	if argsCount == 2 {
 		firstArg := os.Args[1]
 		if firstArg == "--detect" {
-			urlString, err := determineUrl()
-			if err != nil {
-				return
+			if urlString, err := determineUrl(); err == nil {
+				fmt.Println("Detected ", urlString)
 			}
-
-			fmt.Println("Detected ", urlString)
 			return
-		} else if strings.HasPrefix(firstArg, "http://") {
+		} 
+
+		if strings.HasPrefix(firstArg, "http://") {
 			readValuesFrom(firstArg)
 			return
 		}
